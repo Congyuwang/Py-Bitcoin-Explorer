@@ -98,18 +98,6 @@ bitcoin_explorer    </h1>
 <ul>
 <li><code>pip install bitcoin-explorer</code></li>
 </ul></li>
-<li><p>How to build?</p>
-
-<ul>
-<li>install <code>rust</code> toolchain.</li>
-<li>download the complete repo from github.</li>
-<li><code>cd</code> to the repository root.</li>
-<li>run <code>pip install maturin</code> to install <code>maturin</code>.</li>
-<li>run <code>maturin develop --release</code> to install the package directly to
-the currently available python environment.
-Or you may run <code>maturin build --release</code> to build the wheel
-and install the <code>whl</code> file use <code>pip install</code> command.</li>
-</ul></li>
 <li><p>How to use?</p>
 
 <ul>
@@ -134,17 +122,7 @@ Bitcoin Core.</li>
 <span class="sd">1. How to install?</span>
 <span class="sd">    - `pip install bitcoin-explorer`</span>
 
-<span class="sd">2. How to build?</span>
-<span class="sd">    - install `rust` toolchain.</span>
-<span class="sd">    - download the complete repo from github.</span>
-<span class="sd">    - `cd` to the repository root.</span>
-<span class="sd">    - run `pip install maturin` to install `maturin`.</span>
-<span class="sd">    - run `maturin develop --release` to install the package directly to</span>
-<span class="sd">      the currently available python environment.</span>
-<span class="sd">      Or you may run `maturin build --release` to build the wheel</span>
-<span class="sd">      and install the `whl` file use `pip install` command.</span>
-
-<span class="sd">3. How to use?</span>
+<span class="sd">2. How to use?</span>
 <span class="sd">    - Download Bitcoin Core app from bitcoin official website.</span>
 <span class="sd">    - Sync full Bitcoin data.</span>
 <span class="sd">    - If you wish to query transaction with txid (i.e. transaction id),</span>
@@ -203,7 +181,7 @@ Bitcoin Core.</li>
 <span class="sd">                import bitcoin_explorer as bq</span>
 
 <span class="sd">                # launch bitcoinDB</span>
-<span class="sd">                db = bq.BitcoinDB(&quot;~/Bitcoin&quot;, tx_index=True)</span>
+<span class="sd">                db = bq.BitcoinDB(&quot;/Users/me/Bitcoin&quot;, tx_index=True)</span>
 
 <span class="sd">                # query block information of height 10000</span>
 <span class="sd">                block = db.get_block(10000)</span>
@@ -521,7 +499,7 @@ Bitcoin Core.</li>
 <span class="sd">                import bitcoin_explorer as bq</span>
 
 <span class="sd">                # launch bitcoinDB</span>
-<span class="sd">                db = bq.BitcoinDB(&quot;~/Bitcoin&quot;, tx_index=True)</span>
+<span class="sd">                db = bq.BitcoinDB(&quot;/Users/me/Bitcoin&quot;, tx_index=True)</span>
 
 <span class="sd">                # query block information of height 10000</span>
 <span class="sd">                block = db.get_block(10000)</span>
@@ -837,7 +815,7 @@ Bitcoin Core.</li>
 <span class="sd">                import bitcoin_explorer as bq</span>
 
 <span class="sd">                # launch bitcoinDB</span>
-<span class="sd">                db = bq.BitcoinDB(&quot;~/Bitcoin&quot;, tx_index=True)</span>
+<span class="sd">                db = bq.BitcoinDB(&quot;/Users/me/Bitcoin&quot;, tx_index=True)</span>
 
 <span class="sd">                # query block information of height 10000</span>
 <span class="sd">                block = db.get_block(10000)</span>
@@ -893,7 +871,7 @@ Bitcoin Core.</li>
 import bitcoin_explorer as bq
 
 # launch bitcoinDB
-db = bq.BitcoinDB("~/Bitcoin", tx_index=True)
+db = bq.BitcoinDB("/Users/me/Bitcoin", tx_index=True)
 
 # query block information of height 10000
 block = db.get_block(10000)

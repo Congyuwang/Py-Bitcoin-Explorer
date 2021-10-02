@@ -4,17 +4,7 @@ BitcoinQuery: Query Bitcoin Core Data Files As A Database.
 1. How to install?
     - `pip install bitcoin-explorer`
 
-2. How to build?
-    - install `rust` toolchain.
-    - download the complete repo from github.
-    - `cd` to the repository root.
-    - run `pip install maturin` to install `maturin`.
-    - run `maturin develop --release` to install the package directly to
-      the currently available python environment.
-      Or you may run `maturin build --release` to build the wheel
-      and install the `whl` file use `pip install` command.
-
-3. How to use?
+2. How to use?
     - Download Bitcoin Core app from bitcoin official website.
     - Sync full Bitcoin data.
     - If you wish to query transaction with txid (i.e. transaction id),
@@ -73,7 +63,7 @@ class BitcoinDB:
                 import bitcoin_explorer as bq
 
                 # launch bitcoinDB
-                db = bq.BitcoinDB("~/Bitcoin", tx_index=True)
+                db = bq.BitcoinDB("/Users/me/Bitcoin", tx_index=True)
 
                 # query block information of height 10000
                 block = db.get_block(10000)
