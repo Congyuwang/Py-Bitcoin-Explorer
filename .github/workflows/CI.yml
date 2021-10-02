@@ -23,7 +23,7 @@ jobs:
         uses: messense/maturin-action@v1
         with:
           target: x86_64
-          args: --release --out dist
+          args: --release --out dist --no-sdist
       - name: Build wheels - universal2
         uses: messense/maturin-action@v1
         with:
