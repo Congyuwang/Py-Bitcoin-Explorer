@@ -5,13 +5,11 @@ bitcoin-core binary blockchain file as a database (utilising multi-threading).
 
 This package is ported using pyO3 from rust library `bitcoin-explorer`
 
-### Install Requirements
+### Installation
 
-Currently, only macOS py39 wheels are provided. Other platforms needs building.
+MacOS, Windows, and Linux wheels are provided.
 
-For pip to build the package on other OS or python version,
-make sure that `rust` toolchain is installed,
-and `cmake` is also installed.
+Use `pip install bitcoin-explorer` to install.
 
 ## Documentation
 
@@ -44,7 +42,9 @@ db.get_max_height()
 # get block of a certain height
 db.get_block(1000)
 
-# to retrieve the connected outputs of each inputs as well
+# to retrieve the connected outputs of each inputs as well.
+# note that this is inefficient.
+# Use `get_block_iter_range(end, connected=True)` for better performance.
 db.get_block(1000, connected=True)
 
 # get block hash of a certain height.
