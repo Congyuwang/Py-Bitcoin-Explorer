@@ -1,0 +1,26 @@
+[package]
+name = "py-bitcoin-explorer"
+version = "0.2.22"
+edition = "2018"
+readme = "README.md"
+license-file = "LICENSE.txt"
+keywords = ["blockchain", "bitcoin", "explorer", "parser", "concurrency"]
+description = "High Performance Blockchain Deserializer"
+homepage = "https://github.com/Congyuwang/Py-Bitcoin-Explorer"
+repository = "https://github.com/Congyuwang/Py-Bitcoin-Explorer"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bitcoin-explorer = "1.0.0"
+pythonize = "0.14.0"
+pyo3-log = "0.4.0"
+log = "^0.4"
+
+[lib]
+name = "bitcoin_explorer"
+crate-type = ["cdylib"]
+
+[dependencies.pyo3]
+version = "0.14.5"
+features = ["extension-module"]
