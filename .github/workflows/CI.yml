@@ -77,7 +77,6 @@ jobs:
       uses: messense/maturin-action@v1
       with:
         rust-toolchain: stable
-        profile: minimal
         target: ${{ matrix.target }}
         manylinux: auto
         args: --release --out dist --no-sdist
