@@ -1,8 +1,8 @@
 name: CI
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: release
 
 jobs:
   macos:
