@@ -34,9 +34,9 @@ dependencies = [
 
 [[package]]
 name = "bitcoin-explorer"
-version = "1.0.6"
+version = "1.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "972ff18a830adbc480dad413ab7e583594256aa8de571634962e5ef058823836"
+checksum = "ee646c8eaa9b20dca7179648ab3abb8a549b755e09bf1be0001f3ba14fffbe5a"
 dependencies = [
  "bitcoin",
  "bitcoin_hashes",
@@ -48,6 +48,7 @@ dependencies = [
  "num_cpus",
  "rayon",
  "serde",
+ "siphasher",
 ]
 
 [[package]]
@@ -340,7 +341,7 @@ dependencies = [
 
 [[package]]
 name = "py-bitcoin-explorer"
-version = "1.0.6"
+version = "1.0.8"
 dependencies = [
  "bitcoin-explorer",
  "log",
@@ -505,6 +506,12 @@ dependencies = [
  "quote",
  "syn",
 ]
+
+[[package]]
+name = "siphasher"
+version = "0.3.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "533494a8f9b724d33625ab53c6c4800f7cc445895924a8ef649222dcb76e938b"
 
 [[package]]
 name = "smallvec"
