@@ -260,6 +260,9 @@ class BitcoinDB:
             order, and keeps track of unspent outputs, which enables
             looking up outpoints in memory instead of using levelDB.
 
+            When `connected=True`, iterating through 0 to 700000 blocks
+            requires a minimal amount of 32GB physical memory.
+
         Examples:
             ::
 

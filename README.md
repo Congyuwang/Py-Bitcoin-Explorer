@@ -77,6 +77,7 @@ for block in db.get_block_iter_array(heights=[1, 3, 5, 7, 9]):
     do_something_with(block)
     
 # use iterator, connect outpoints
+# !! This requires a minimal amount of 32GB memory. 
 for block in db.get_block_iter_range(end=700000, connected=True):
     do_something_with(block)
 ```
