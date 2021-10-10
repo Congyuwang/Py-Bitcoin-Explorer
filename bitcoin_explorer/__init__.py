@@ -83,18 +83,7 @@ class BitcoinDB:
         self.tx_index = tx_index
 
     def get_max_height(self) -> int:
-        """Get the maximum height found in block index.
-
-        Notes:
-            It is not necessarily true that any height smaller than
-            `get_max_height()` can be used to query `get_block()`.
-            This max_height is only the max height of block header
-            information. The actual block data might not have been
-            synced for querying.
-
-            However, `get_block_header()`, `get_height_from_hash()`
-            `get_hash_from_height()`, will necessarily return valid
-            data, as long as height is smaller than `get_max_height()`.
+        """Get the maximum height found in block data directory.
 
         Returns: max height in block index.
 
