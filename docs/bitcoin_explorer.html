@@ -201,18 +201,7 @@ Bitcoin Core.</li>
         <span class="bp">self</span><span class="o">.</span><span class="n">tx_index</span> <span class="o">=</span> <span class="n">tx_index</span>
 
     <span class="k">def</span> <span class="nf">get_max_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the maximum height found in block index.</span>
-
-<span class="sd">        Notes:</span>
-<span class="sd">            It is not necessarily true that any height smaller than</span>
-<span class="sd">            `get_max_height()` can be used to query `get_block()`.</span>
-<span class="sd">            This max_height is only the max height of block header</span>
-<span class="sd">            information. The actual block data might not have been</span>
-<span class="sd">            synced for querying.</span>
-
-<span class="sd">            However, `get_block_header()`, `get_height_from_hash()`</span>
-<span class="sd">            `get_hash_from_height()`, will necessarily return valid</span>
-<span class="sd">            data, as long as height is smaller than `get_max_height()`.</span>
+        <span class="sd">&quot;&quot;&quot;Get the maximum height found in block data directory.</span>
 
 <span class="sd">        Returns: max height in block index.</span>
 
@@ -377,6 +366,9 @@ Bitcoin Core.</li>
 <span class="sd">            It loops over blocks and transactions in sequential</span>
 <span class="sd">            order, and keeps track of unspent outputs, which enables</span>
 <span class="sd">            looking up outpoints in memory instead of using levelDB.</span>
+
+<span class="sd">            When `connected=True`, iterating through 0 to 700000 blocks</span>
+<span class="sd">            requires a minimal amount of 32GB physical memory.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            ::</span>
@@ -519,18 +511,7 @@ Bitcoin Core.</li>
         <span class="bp">self</span><span class="o">.</span><span class="n">tx_index</span> <span class="o">=</span> <span class="n">tx_index</span>
 
     <span class="k">def</span> <span class="nf">get_max_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the maximum height found in block index.</span>
-
-<span class="sd">        Notes:</span>
-<span class="sd">            It is not necessarily true that any height smaller than</span>
-<span class="sd">            `get_max_height()` can be used to query `get_block()`.</span>
-<span class="sd">            This max_height is only the max height of block header</span>
-<span class="sd">            information. The actual block data might not have been</span>
-<span class="sd">            synced for querying.</span>
-
-<span class="sd">            However, `get_block_header()`, `get_height_from_hash()`</span>
-<span class="sd">            `get_hash_from_height()`, will necessarily return valid</span>
-<span class="sd">            data, as long as height is smaller than `get_max_height()`.</span>
+        <span class="sd">&quot;&quot;&quot;Get the maximum height found in block data directory.</span>
 
 <span class="sd">        Returns: max height in block index.</span>
 
@@ -695,6 +676,9 @@ Bitcoin Core.</li>
 <span class="sd">            It loops over blocks and transactions in sequential</span>
 <span class="sd">            order, and keeps track of unspent outputs, which enables</span>
 <span class="sd">            looking up outpoints in memory instead of using levelDB.</span>
+
+<span class="sd">            When `connected=True`, iterating through 0 to 700000 blocks</span>
+<span class="sd">            requires a minimal amount of 32GB physical memory.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            ::</span>
@@ -905,18 +889,7 @@ and will print a warning if it fails to open.</li>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">get_max_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the maximum height found in block index.</span>
-
-<span class="sd">        Notes:</span>
-<span class="sd">            It is not necessarily true that any height smaller than</span>
-<span class="sd">            `get_max_height()` can be used to query `get_block()`.</span>
-<span class="sd">            This max_height is only the max height of block header</span>
-<span class="sd">            information. The actual block data might not have been</span>
-<span class="sd">            synced for querying.</span>
-
-<span class="sd">            However, `get_block_header()`, `get_height_from_hash()`</span>
-<span class="sd">            `get_hash_from_height()`, will necessarily return valid</span>
-<span class="sd">            data, as long as height is smaller than `get_max_height()`.</span>
+        <span class="sd">&quot;&quot;&quot;Get the maximum height found in block data directory.</span>
 
 <span class="sd">        Returns: max height in block index.</span>
 
@@ -926,21 +899,7 @@ and will print a warning if it fails to open.</li>
 
         </details>
 
-            <div class="docstring"><p>Get the maximum height found in block index.</p>
-
-<h6 id="notes">Notes</h6>
-
-<blockquote>
-  <p>It is not necessarily true that any height smaller than
-  <code><a href="#BitcoinDB.get_max_height">get_max_height()</a></code> can be used to query <code><a href="#BitcoinDB.get_block">get_block()</a></code>.
-  This max_height is only the max height of block header
-  information. The actual block data might not have been
-  synced for querying.</p>
-  
-  <p>However, <code><a href="#BitcoinDB.get_block_header">get_block_header()</a></code>, <code><a href="#BitcoinDB.get_height_from_hash">get_height_from_hash()</a></code>
-  <code><a href="#BitcoinDB.get_hash_from_height">get_hash_from_height()</a></code>, will necessarily return valid
-  data, as long as height is smaller than <code><a href="#BitcoinDB.get_max_height">get_max_height()</a></code>.</p>
-</blockquote>
+            <div class="docstring"><p>Get the maximum height found in block data directory.</p>
 
 <p>Returns: max height in block index.</p>
 </div>
@@ -1351,6 +1310,9 @@ related outputs according to input outpoints.</li>
 <span class="sd">            order, and keeps track of unspent outputs, which enables</span>
 <span class="sd">            looking up outpoints in memory instead of using levelDB.</span>
 
+<span class="sd">            When `connected=True`, iterating through 0 to 700000 blocks</span>
+<span class="sd">            requires a minimal amount of 32GB physical memory.</span>
+
 <span class="sd">        Examples:</span>
 <span class="sd">            ::</span>
 
@@ -1396,6 +1358,9 @@ related outputs according to input outpoints.</li>
   <p>It loops over blocks and transactions in sequential
   order, and keeps track of unspent outputs, which enables
   looking up outpoints in memory instead of using levelDB.</p>
+  
+  <p>When <code>connected=True</code>, iterating through 0 to 700000 blocks
+  requires a minimal amount of 32GB physical memory.</p>
 </blockquote>
 
 <h6 id="examples">Examples</h6>
