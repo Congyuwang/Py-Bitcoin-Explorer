@@ -250,7 +250,7 @@ class BitcoinDB:
             looking up outpoints in memory instead of using levelDB.
 
             When `connected=True`, iterating through 0 to 700000 blocks
-            requires a minimal amount of 32GB physical memory.
+            requires about 5 GB memory.
 
         Examples:
             ::
