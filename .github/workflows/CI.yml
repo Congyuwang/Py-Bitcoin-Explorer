@@ -82,8 +82,8 @@ jobs:
         architecture: x64
     - name: Install LLVM and Clang
       run: |
-        apt-get update
-        apt-get install clang
+        sudo apt-get update
+        sudo apt-get install clang
     - name: Build Wheels
       uses: messense/maturin-action@v1
       with:
