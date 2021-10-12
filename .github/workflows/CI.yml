@@ -85,15 +85,24 @@ jobs:
       with:
         version: 11.0
         directory: ${{ runner.temp }}/llvm-11.0
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+    - name: debug ls llvm lib
+      run: |
+        ls ${{ runner.temp }}/llvm-11.0/lib
     - name: Build Wheels
       uses: messense/maturin-action@v1
+      env:
+        LIBCLANG_PATH: ${{ runner.temp }}/llvm-11.0/lib
       with:
         rust-toolchain: stable
         target: ${{ matrix.target }}
         manylinux: auto
         args: --release --out dist --no-sdist
-      env:
-        LIBCLANG_PATH: ${{ runner.temp }}/llvm-11.0/lib
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
