@@ -45,11 +45,11 @@ jobs:
         with:
           python-version: 3.9
           architecture: ${{ matrix.target }}
-      - name: Set up Clang
-        uses: egor-tensin/setup-clang@v1
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
         with:
-          version: latest
-          platform: x64
+          version: 11.0
+          directory: ${{ runner.temp }}/llvm-11.0
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -61,28 +61,30 @@ jobs:
         with:
           target: ${{ matrix.target }}
           args: --release --out dist --no-sdist
+        env:
+          LIBCLANG_PATH: ${{ runner.temp }}/llvm-11.0/lib
       - name: Upload wheels
         uses: actions/upload-artifact@v2
         with:
           name: wheels
           path: dist
 
-  linux-x86:
+  linux:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [x86_64]
+        target: [x86_64, i686]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with:
         python-version: 3.9
         architecture: x64
-    - name: Set up Clang
-      uses: egor-tensin/setup-clang@v1
+    - name: Install LLVM and Clang
+      uses: KyleMayes/install-llvm-action@v1
       with:
-        version: latest
-        platform: x64
+        version: 11.0
+        directory: ${{ runner.temp }}/llvm-11.0
     - name: Build Wheels
       uses: messense/maturin-action@v1
       with:
@@ -90,35 +92,8 @@ jobs:
         target: ${{ matrix.target }}
         manylinux: auto
         args: --release --out dist --no-sdist
-    - name: Upload wheels
-      uses: actions/upload-artifact@v2
-      with:
-        name: wheels
-        path: dist
-
-  linux-i686:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target: [i686]
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-        architecture: x64
-    - name: Set up Clang
-      uses: egor-tensin/setup-clang@v1
-      with:
-        version: latest
-        platform: i686
-    - name: Build Wheels
-      uses: messense/maturin-action@v1
-      with:
-        rust-toolchain: stable
-        target: ${{ matrix.target }}
-        manylinux: auto
-        args: --release --out dist --no-sdist
+      env:
+        LIBCLANG_PATH: ${{ runner.temp }}/llvm-11.0/lib
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
@@ -129,7 +104,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     if: "startsWith(github.ref, 'refs/tags/')"
-    needs: [ macos, windows, linux-x86, linux-i686 ]
+    needs: [ macos, windows, linux ]
     steps:
       - uses: actions/download-artifact@v2
         with:
