@@ -86,9 +86,6 @@ jobs:
         toolchain: stable
         profile: minimal
         override: true
-    - name: debug ls llvm lib
-      run: |
-        ls ${{ runner.temp }}/llvm-11.0/lib
     - name: Build Wheels
       uses: messense/maturin-action@v1
       with:
