@@ -1,8 +1,8 @@
 name: CI
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: master
 
 jobs:
   macos:
@@ -45,6 +45,11 @@ jobs:
         with:
           python-version: 3.9
           architecture: ${{ matrix.target }}
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: 11.0
+          directory: ${{ runner.temp }}/llvm-11.0
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -56,6 +61,8 @@ jobs:
         with:
           target: ${{ matrix.target }}
           args: --release --out dist --no-sdist
+        env:
+          LIBCLANG_PATH: ${{ runner.temp }}/llvm-11.0/lib
       - name: Upload wheels
         uses: actions/upload-artifact@v2
         with:
@@ -66,13 +73,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [x86_64, i686]
+        target: [x86_64]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with:
         python-version: 3.9
         architecture: x64
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
     - name: Build Wheels
       uses: messense/maturin-action@v1
       with:
@@ -80,6 +93,7 @@ jobs:
         target: ${{ matrix.target }}
         manylinux: auto
         args: --release --out dist --no-sdist
+        container: off
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
