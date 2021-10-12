@@ -76,6 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        target: [x86_64, i686]
         py_version: [3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@v2
@@ -93,10 +94,10 @@ jobs:
       uses: messense/maturin-action@v1
       with:
         rust-toolchain: stable
-        target: x86_64
+        target: ${{ matrix.target }}
         manylinux: auto
         args: --release --out dist --no-sdist
-        container: off
+        container: messense/manylinux2014-cross:x86_64
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
