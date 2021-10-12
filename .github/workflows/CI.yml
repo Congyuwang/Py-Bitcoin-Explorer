@@ -1,8 +1,8 @@
 name: CI
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [release]
 
 jobs:
   macos:
@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [x86_64, i686]
+        target: [x86_64]
         py_version: [3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@v2
