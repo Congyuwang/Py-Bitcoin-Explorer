@@ -92,8 +92,6 @@ jobs:
         target: ${{ matrix.target }}
         manylinux: auto
         args: --release --out dist --no-sdist
-      env:
-        LIBCLANG_PATH: ${{ runner.temp }}/llvm-11.0/lib
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
