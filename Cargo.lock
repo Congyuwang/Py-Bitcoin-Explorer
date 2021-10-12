@@ -64,9 +64,9 @@ dependencies = [
 
 [[package]]
 name = "bitcoin-explorer"
-version = "1.2.1"
+version = "1.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "228e95a4c6225b7012f9112465e857ea44df10c328332c05823655c7a7fe97eb"
+checksum = "341c0877feab5e7faa96931325be0382aeade8e3c149a8ceead56c9bd9661ded"
 dependencies = [
  "ahash",
  "bitcoin",
@@ -498,7 +498,7 @@ dependencies = [
 
 [[package]]
 name = "py-bitcoin-explorer"
-version = "1.2.1"
+version = "1.2.3"
 dependencies = [
  "bitcoin-explorer",
  "log",
