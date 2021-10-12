@@ -33,4 +33,4 @@ jobs:
         directory: ${{ runner.temp }}/llvm-11.0
     - name: ls
       run: |
-        ls ${{ runner.temp }}/llvm-11.0
+        ls ${{ runner.temp }}/llvm-11.0/lib | grep clang
