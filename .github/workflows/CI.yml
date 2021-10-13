@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [x86_64, i686, aarch64, armv7, s390x, ppc64le, ppc64]
+        target: [x86_64, i686 ]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
@@ -88,7 +88,7 @@ jobs:
       with:
         rust-toolchain: stable
         target: ${{ matrix.target }}
-        manylinux: auto
+        manylinux: 2014
         args: --release --out dist --no-sdist
     - name: Upload wheels
       uses: actions/upload-artifact@v2
