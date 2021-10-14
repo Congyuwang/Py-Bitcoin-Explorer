@@ -84,11 +84,25 @@ class BitcoinDB:
 
     def get_max_height(self) -> int:
         """Get the maximum height found in block data directory.
+        
+        Deprecated: use `get_block_count()` instead.
 
-        Returns: max height in block index.
+        Returns: max height found in block index.
 
         """
-        return self.db.get_max_height()
+        return self.db.get_block_count()
+
+    def get_block_count(self) -> int:
+        """Get total number of blocks on disk for query.
+
+        Note:
+            This API guarantees that blocks from
+            0 to `get_block_count() - 1` are all synced to disk.
+
+        Returns: number of blocks avaiable for query on disk.
+
+        """
+        return self.db.get_block_count()
 
     def get_block(self, height: int,
                   simplify: bool = True,
