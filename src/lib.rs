@@ -253,6 +253,10 @@ macro_rules! derive_py_iter {
 
 #[pymodule]
 fn bitcoin_explorer(_py: Python, m: &PyModule) -> PyResult<()> {
+    // fix iterator assertion failure before next pyo3 update release
+    unsafe {
+        pyo3::ffi::PyEval_InitThreads();
+    }
     pyo3_log::init();
     m.add_class::<BitcoinDBPy>()?;
     Ok(())
