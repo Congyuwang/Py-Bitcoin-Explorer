@@ -186,7 +186,7 @@ impl BitcoinDBPy {
 
     #[pyo3(text_signature = "($self, /)")]
     fn get_max_height(&self) -> usize {
-        self.db.get_max_height()
+        self.db.get_block_count()
     }
 
     #[pyo3(text_signature = "($self, /)")]
