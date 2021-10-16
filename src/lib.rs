@@ -71,7 +71,7 @@ impl BitcoinDBPy {
     }
 
     #[pyo3(text_signature = "($self, hash, /)")]
-    fn get_height_from_hash(&self, hash: String) -> PyResult<i32> {
+    fn get_height_from_hash(&self, hash: String) -> PyResult<usize> {
         if let Ok(blk_hash) = BlockHash::from_hex(&hash) {
             match self.db.get_height_from_hash(&blk_hash) {
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
@@ -85,7 +85,7 @@ impl BitcoinDBPy {
     }
 
     #[pyo3(text_signature = "($self, txid, /)")]
-    fn get_height_from_txid(&self, txid: String) -> PyResult<i32> {
+    fn get_height_from_txid(&self, txid: String) -> PyResult<usize> {
         if let Ok(txid) = Txid::from_hex(&txid) {
             match self.db.get_height_of_transaction(&txid) {
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
