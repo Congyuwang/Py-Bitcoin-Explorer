@@ -161,32 +161,32 @@ impl BitcoinDBPy {
     }
 
     #[pyo3(text_signature = "($self, stop, /)")]
-    fn iter_block_full_arr(&self, heights: Vec<u32>) -> PyResult<FBlockIterArr> {
+    fn iter_block_full_arr(&self, heights: Vec<usize>) -> PyResult<FBlockIterArr> {
         Ok(FBlockIterArr::new(&self.db, heights))
     }
 
     #[pyo3(text_signature = "($self, stop, /)")]
-    fn iter_block_simple_arr(&self, heights: Vec<u32>) -> PyResult<SBlockIterArr> {
+    fn iter_block_simple_arr(&self, heights: Vec<usize>) -> PyResult<SBlockIterArr> {
         Ok(SBlockIterArr::new(&self.db, heights))
     }
 
     #[pyo3(text_signature = "($self, start, stop, /)")]
-    fn iter_block_full_seq(&self, start: u32, stop: u32) -> PyResult<FBlockIter> {
+    fn iter_block_full_seq(&self, start: usize, stop: usize) -> PyResult<FBlockIter> {
         Ok(FBlockIter::new(&self.db, start, stop))
     }
 
     #[pyo3(text_signature = "($self, start, stop, /)")]
-    fn iter_block_simple_seq(&self, start: u32, stop: u32) -> PyResult<SBlockIter> {
+    fn iter_block_simple_seq(&self, start: usize, stop: usize) -> PyResult<SBlockIter> {
         Ok(SBlockIter::new(&self.db, start, stop))
     }
 
     #[pyo3(text_signature = "($self, stop, /)")]
-    fn iter_block_full_connected(&self, stop: u32) -> PyResult<FConnBlockIter> {
+    fn iter_block_full_connected(&self, stop: usize) -> PyResult<FConnBlockIter> {
         Ok(FConnBlockIter::new(&self.db, stop))
     }
 
     #[pyo3(text_signature = "($self, stop, /)")]
-    fn iter_block_simple_connected(&self, stop: u32) -> PyResult<SConnBlockIter> {
+    fn iter_block_simple_connected(&self, stop: usize) -> PyResult<SConnBlockIter> {
         Ok(SConnBlockIter::new(&self.db, stop))
     }
 
@@ -214,12 +214,12 @@ impl BitcoinDBPy {
 }
 
 // construct python iterators
-derive_py_iter!(FBlockIterArr, BlockIter, FBlock, iter_heights, heights: Vec<u32>);
-derive_py_iter!(SBlockIterArr, BlockIter, SBlock, iter_heights, heights: Vec<u32>);
-derive_py_iter!(FBlockIter, BlockIter, FBlock, iter_block, start: u32, end: u32);
-derive_py_iter!(SBlockIter, BlockIter, SBlock, iter_block, start: u32, end: u32);
-derive_py_iter!(FConnBlockIter, ConnectedBlockIter, FConnectedBlock, iter_connected_block, end: u32);
-derive_py_iter!(SConnBlockIter, ConnectedBlockIter, SConnectedBlock, iter_connected_block, end: u32);
+derive_py_iter!(FBlockIterArr, BlockIter, FBlock, iter_heights, heights: Vec<usize>);
+derive_py_iter!(SBlockIterArr, BlockIter, SBlock, iter_heights, heights: Vec<usize>);
+derive_py_iter!(FBlockIter, BlockIter, FBlock, iter_block, start: usize, end: usize);
+derive_py_iter!(SBlockIter, BlockIter, SBlock, iter_block, start: usize, end: usize);
+derive_py_iter!(FConnBlockIter, ConnectedBlockIter, FConnectedBlock, iter_connected_block, end: usize);
+derive_py_iter!(SConnBlockIter, ConnectedBlockIter, SConnectedBlock, iter_connected_block, end: usize);
 
 #[macro_export]
 macro_rules! derive_py_iter {
