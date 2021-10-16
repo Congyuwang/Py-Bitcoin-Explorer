@@ -1,6 +1,6 @@
 [project]
 name = "bitcoin-explorer"
-version = "1.2.10"
+version = "1.2.11"
 description = "High Performance Blockchain Deserializer"
 long_description_content_type="text/markdown"
 readme = "README.md"

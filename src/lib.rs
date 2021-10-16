@@ -23,7 +23,7 @@ impl BitcoinDBPy {
     }
 
     #[pyo3(text_signature = "($self, height, /)")]
-    fn get_block_full(&self, height: i32, py: Python) -> PyResult<PyObject> {
+    fn get_block_full(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.db.get_block::<FBlock>(height) {
             Ok(block) => Ok(pythonize(py, &block)?),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
@@ -31,7 +31,7 @@ impl BitcoinDBPy {
     }
 
     #[pyo3(text_signature = "($self, height, /)")]
-    fn get_block_simple(&self, height: i32, py: Python) -> PyResult<PyObject> {
+    fn get_block_simple(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.db.get_block::<SBlock>(height) {
             Ok(block) => Ok(pythonize(py, &block)?),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
@@ -39,7 +39,7 @@ impl BitcoinDBPy {
     }
 
     #[pyo3(text_signature = "($self, height, /)")]
-    fn get_block_full_connected(&self, height: i32, py: Python) -> PyResult<PyObject> {
+    fn get_block_full_connected(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.db.get_connected_block::<FConnectedBlock>(height) {
             Ok(block) => Ok(pythonize(py, &block)?),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
@@ -47,7 +47,7 @@ impl BitcoinDBPy {
     }
 
     #[pyo3(text_signature = "($self, height, /)")]
-    fn get_block_simple_connected(&self, height: i32, py: Python) -> PyResult<PyObject> {
+    fn get_block_simple_connected(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.db.get_connected_block::<SConnectedBlock>(height) {
             Ok(block) => Ok(pythonize(py, &block)?),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
@@ -72,9 +72,15 @@ impl BitcoinDBPy {
 
     #[pyo3(text_signature = "($self, hash, /)")]
     fn get_height_from_hash(&self, hash: String) -> PyResult<i32> {
-        match self.db.get_height_from_hash(&hash) {
-            Ok(h) => Ok(h),
-            Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
+        if let Ok(blk_hash) = BlockHash::from_hex(&hash) {
+            match self.db.get_height_from_hash(&blk_hash) {
+                Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
+                Ok(h) => Ok(h),
+            }
+        } else {
+            Err(pyo3::exceptions::PyException::new_err(
+                "invalid txid format",
+            ))
         }
     }
 
@@ -197,7 +203,7 @@ impl BitcoinDBPy {
     #[staticmethod]
     #[pyo3(text_signature = "($self, script_pub_key, /)")]
     fn parse_script(script_pub_key: String, py: Python) -> PyResult<PyObject> {
-        let script = parse_script(&script_pub_key);
+        let script = get_addresses_from_script(&script_pub_key);
         match script {
             Ok(script) => Ok(pythonize(py, &script)?),
             Err(_) => Err(pyo3::exceptions::PyException::new_err(
