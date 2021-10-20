@@ -232,8 +232,9 @@ macro_rules! derive_py_iter {
 
         impl $new_iter_type {
             fn new(db: &BitcoinDB, $($p: $type),*) -> $new_iter_type {
+                let inner_iter: $inner_iter_type<$iter_type> = db.$new($($p),*);
                 $new_iter_type {
-                    iter: db.$new::<$iter_type>($($p),*),
+                    iter: inner_iter,
                 }
             }
         }
