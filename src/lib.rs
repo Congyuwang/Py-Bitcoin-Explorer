@@ -4,11 +4,18 @@ use pyo3::prelude::*;
 use pyo3::PyIterProtocol;
 use pyo3::Python;
 use pythonize::pythonize;
+use std::ops::Deref;
 use std::path::Path;
 
 #[pyclass(name = "BitcoinDB")]
-struct BitcoinDBPy {
-    db: BitcoinDB,
+struct BitcoinDBPy(BitcoinDB);
+
+impl Deref for BitcoinDBPy {
+    type Target = BitcoinDB;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
 }
 
 #[pymethods]
@@ -17,14 +24,14 @@ impl BitcoinDBPy {
     fn new(path: &str, tx_index: bool) -> PyResult<Self> {
         let path = Path::new(path);
         match BitcoinDB::new(path, tx_index) {
-            Ok(db) => Ok(BitcoinDBPy { db }),
+            Ok(db) => Ok(BitcoinDBPy(db)),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
     }
 
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_full(&self, height: usize, py: Python) -> PyResult<PyObject> {
-        match self.db.get_block::<FBlock>(height) {
+        match self.get_block::<FBlock>(height) {
             Ok(block) => Ok(pythonize(py, &block)?),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
@@ -32,7 +39,7 @@ impl BitcoinDBPy {
 
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_simple(&self, height: usize, py: Python) -> PyResult<PyObject> {
-        match self.db.get_block::<SBlock>(height) {
+        match self.get_block::<SBlock>(height) {
             Ok(block) => Ok(pythonize(py, &block)?),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
@@ -40,7 +47,7 @@ impl BitcoinDBPy {
 
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_full_connected(&self, height: usize, py: Python) -> PyResult<PyObject> {
-        match self.db.get_connected_block::<FConnectedBlock>(height) {
+        match self.get_connected_block::<FConnectedBlock>(height) {
             Ok(block) => Ok(pythonize(py, &block)?),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
@@ -48,7 +55,7 @@ impl BitcoinDBPy {
 
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_simple_connected(&self, height: usize, py: Python) -> PyResult<PyObject> {
-        match self.db.get_connected_block::<SConnectedBlock>(height) {
+        match self.get_connected_block::<SConnectedBlock>(height) {
             Ok(block) => Ok(pythonize(py, &block)?),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
@@ -56,7 +63,7 @@ impl BitcoinDBPy {
 
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_header(&self, height: usize, py: Python) -> PyResult<PyObject> {
-        match self.db.get_header(height) {
+        match self.get_header(height) {
             Ok(block) => Ok(pythonize(py, &block)?),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
@@ -64,7 +71,7 @@ impl BitcoinDBPy {
 
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_hash_from_height(&self, height: usize) -> PyResult<String> {
-        match self.db.get_hash_from_height(height) {
+        match self.0.get_hash_from_height(height) {
             Ok(b) => Ok(b.to_hex()),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
@@ -73,7 +80,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, hash, /)")]
     fn get_height_from_hash(&self, hash: String) -> PyResult<usize> {
         if let Ok(blk_hash) = BlockHash::from_hex(&hash) {
-            match self.db.get_height_from_hash(&blk_hash) {
+            match self.0.get_height_from_hash(&blk_hash) {
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
                 Ok(h) => Ok(h),
             }
@@ -87,7 +94,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, txid, /)")]
     fn get_height_from_txid(&self, txid: String) -> PyResult<usize> {
         if let Ok(txid) = Txid::from_hex(&txid) {
-            match self.db.get_height_of_transaction(&txid) {
+            match self.get_height_of_transaction(&txid) {
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
                 Ok(h) => Ok(h),
             }
@@ -101,7 +108,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, txid, /)")]
     fn get_transaction_full(&self, txid: String, py: Python) -> PyResult<PyObject> {
         if let Ok(txid) = Txid::from_hex(&txid) {
-            match self.db.get_transaction::<FTransaction>(&txid) {
+            match self.get_transaction::<FTransaction>(&txid) {
                 Ok(t) => Ok(pythonize(py, &t)?),
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
             }
@@ -115,7 +122,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, txid, /)")]
     fn get_transaction_simple(&self, txid: String, py: Python) -> PyResult<PyObject> {
         if let Ok(txid) = Txid::from_hex(&txid) {
-            match self.db.get_transaction::<STransaction>(&txid) {
+            match self.get_transaction::<STransaction>(&txid) {
                 Ok(t) => Ok(pythonize(py, &t)?),
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
             }
@@ -129,10 +136,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, txid, /)")]
     fn get_transaction_full_connected(&self, txid: String, py: Python) -> PyResult<PyObject> {
         if let Ok(txid) = Txid::from_hex(&txid) {
-            match self
-                .db
-                .get_connected_transaction::<FConnectedTransaction>(&txid)
-            {
+            match self.get_connected_transaction::<FConnectedTransaction>(&txid) {
                 Ok(t) => Ok(pythonize(py, &t)?),
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
             }
@@ -146,10 +150,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, txid, /)")]
     fn get_transaction_simple_connected(&self, txid: String, py: Python) -> PyResult<PyObject> {
         if let Ok(txid) = Txid::from_hex(&txid) {
-            match self
-                .db
-                .get_connected_transaction::<SConnectedTransaction>(&txid)
-            {
+            match self.get_connected_transaction::<SConnectedTransaction>(&txid) {
                 Ok(t) => Ok(pythonize(py, &t)?),
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
             }
@@ -162,42 +163,42 @@ impl BitcoinDBPy {
 
     #[pyo3(text_signature = "($self, stop, /)")]
     fn iter_block_full_arr(&self, heights: Vec<usize>) -> PyResult<FBlockIterArr> {
-        Ok(FBlockIterArr::new(&self.db, heights))
+        Ok(FBlockIterArr::new(&self, heights))
     }
 
     #[pyo3(text_signature = "($self, stop, /)")]
     fn iter_block_simple_arr(&self, heights: Vec<usize>) -> PyResult<SBlockIterArr> {
-        Ok(SBlockIterArr::new(&self.db, heights))
+        Ok(SBlockIterArr::new(&self, heights))
     }
 
     #[pyo3(text_signature = "($self, start, stop, /)")]
     fn iter_block_full_seq(&self, start: usize, stop: usize) -> PyResult<FBlockIter> {
-        Ok(FBlockIter::new(&self.db, start, stop))
+        Ok(FBlockIter::new(&self, start, stop))
     }
 
     #[pyo3(text_signature = "($self, start, stop, /)")]
     fn iter_block_simple_seq(&self, start: usize, stop: usize) -> PyResult<SBlockIter> {
-        Ok(SBlockIter::new(&self.db, start, stop))
+        Ok(SBlockIter::new(&self, start, stop))
     }
 
     #[pyo3(text_signature = "($self, stop, /)")]
     fn iter_block_full_connected(&self, stop: usize) -> PyResult<FConnBlockIter> {
-        Ok(FConnBlockIter::new(&self.db, stop))
+        Ok(FConnBlockIter::new(&self, stop))
     }
 
     #[pyo3(text_signature = "($self, stop, /)")]
     fn iter_block_simple_connected(&self, stop: usize) -> PyResult<SConnBlockIter> {
-        Ok(SConnBlockIter::new(&self.db, stop))
+        Ok(SConnBlockIter::new(&self, stop))
     }
 
     #[pyo3(text_signature = "($self, /)")]
     fn get_max_height(&self) -> usize {
-        self.db.get_block_count()
+        self.0.get_block_count()
     }
 
     #[pyo3(text_signature = "($self, /)")]
     fn get_block_count(&self) -> usize {
-        self.db.get_block_count()
+        self.0.get_block_count()
     }
 
     #[staticmethod]
@@ -214,12 +215,50 @@ impl BitcoinDBPy {
 }
 
 // construct python iterators
-derive_py_iter!(FBlockIterArr, BlockIter, FBlock, iter_heights, heights: Vec<usize>);
-derive_py_iter!(SBlockIterArr, BlockIter, SBlock, iter_heights, heights: Vec<usize>);
-derive_py_iter!(FBlockIter, BlockIter, FBlock, iter_block, start: usize, end: usize);
-derive_py_iter!(SBlockIter, BlockIter, SBlock, iter_block, start: usize, end: usize);
-derive_py_iter!(FConnBlockIter, ConnectedBlockIter, FConnectedBlock, iter_connected_block, end: usize);
-derive_py_iter!(SConnBlockIter, ConnectedBlockIter, SConnectedBlock, iter_connected_block, end: usize);
+derive_py_iter!(
+    FBlockIterArr,
+    BlockIter,
+    FBlock,
+    iter_heights,
+    heights: Vec<usize>
+);
+derive_py_iter!(
+    SBlockIterArr,
+    BlockIter,
+    SBlock,
+    iter_heights,
+    heights: Vec<usize>
+);
+derive_py_iter!(
+    FBlockIter,
+    BlockIter,
+    FBlock,
+    iter_block,
+    start: usize,
+    end: usize
+);
+derive_py_iter!(
+    SBlockIter,
+    BlockIter,
+    SBlock,
+    iter_block,
+    start: usize,
+    end: usize
+);
+derive_py_iter!(
+    FConnBlockIter,
+    ConnectedBlockIter,
+    FConnectedBlock,
+    iter_connected_block,
+    end: usize
+);
+derive_py_iter!(
+    SConnBlockIter,
+    ConnectedBlockIter,
+    SConnectedBlock,
+    iter_connected_block,
+    end: usize
+);
 
 #[macro_export]
 macro_rules! derive_py_iter {

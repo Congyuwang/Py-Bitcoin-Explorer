@@ -1,6 +1,6 @@
 [package]
 name = "py-bitcoin-explorer"
-version = "1.2.13"
+version = "1.2.14"
 edition = "2018"
 readme = "README.md"
 license-file = "LICENSE.txt"
@@ -12,7 +12,7 @@ repository = "https://github.com/Congyuwang/Py-Bitcoin-Explorer"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bitcoin-explorer = "=1.2.11"
+bitcoin-explorer = "^1.2"
 pythonize = "^0.14"
 pyo3-log = "^0.4"
 log = "^0.4"
