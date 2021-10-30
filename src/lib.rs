@@ -1,3 +1,5 @@
+mod proto_to_py;
+
 #[doc(inline)]
 pub use bitcoin_explorer::*;
 use pyo3::prelude::*;
@@ -6,6 +8,7 @@ use pyo3::Python;
 use pythonize::pythonize;
 use std::ops::Deref;
 use std::path::Path;
+use proto_to_py::*;
 
 #[pyclass(name = "BitcoinDB")]
 struct BitcoinDBPy(BitcoinDB);
@@ -40,7 +43,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_simple(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.get_block::<SBlock>(height) {
-            Ok(block) => Ok(pythonize(py, &block)?),
+            Ok(block) => block.to_py(py),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
     }
