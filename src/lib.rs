@@ -1,11 +1,14 @@
+#[macro_use]
+mod proto_to_py;
+
 #[doc(inline)]
 pub use bitcoin_explorer::*;
 use pyo3::prelude::*;
 use pyo3::PyIterProtocol;
 use pyo3::Python;
-use pythonize::pythonize;
 use std::ops::Deref;
 use std::path::Path;
+use proto_to_py::*;
 
 #[pyclass(name = "BitcoinDB")]
 struct BitcoinDBPy(BitcoinDB);
@@ -32,7 +35,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_full(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.get_block::<FBlock>(height) {
-            Ok(block) => Ok(pythonize(py, &block)?),
+            Ok(block) => block.to_py(py),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
     }
@@ -40,7 +43,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_simple(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.get_block::<SBlock>(height) {
-            Ok(block) => Ok(pythonize(py, &block)?),
+            Ok(block) => block.to_py(py),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
     }
@@ -48,7 +51,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_full_connected(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.get_connected_block::<FConnectedBlock>(height) {
-            Ok(block) => Ok(pythonize(py, &block)?),
+            Ok(block) => block.to_py(py),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
     }
@@ -56,7 +59,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_simple_connected(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.get_connected_block::<SConnectedBlock>(height) {
-            Ok(block) => Ok(pythonize(py, &block)?),
+            Ok(block) => block.to_py(py),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
     }
@@ -64,7 +67,7 @@ impl BitcoinDBPy {
     #[pyo3(text_signature = "($self, height, /)")]
     fn get_block_header(&self, height: usize, py: Python) -> PyResult<PyObject> {
         match self.get_header(height) {
-            Ok(block) => Ok(pythonize(py, &block)?),
+            Ok(block) => block.to_py(py),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
     }
@@ -109,7 +112,7 @@ impl BitcoinDBPy {
     fn get_transaction_full(&self, txid: String, py: Python) -> PyResult<PyObject> {
         if let Ok(txid) = Txid::from_hex(&txid) {
             match self.get_transaction::<FTransaction>(&txid) {
-                Ok(t) => Ok(pythonize(py, &t)?),
+                Ok(t) => t.to_py(py),
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
             }
         } else {
@@ -123,7 +126,7 @@ impl BitcoinDBPy {
     fn get_transaction_simple(&self, txid: String, py: Python) -> PyResult<PyObject> {
         if let Ok(txid) = Txid::from_hex(&txid) {
             match self.get_transaction::<STransaction>(&txid) {
-                Ok(t) => Ok(pythonize(py, &t)?),
+                Ok(t) => t.to_py(py),
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
             }
         } else {
@@ -137,7 +140,7 @@ impl BitcoinDBPy {
     fn get_transaction_full_connected(&self, txid: String, py: Python) -> PyResult<PyObject> {
         if let Ok(txid) = Txid::from_hex(&txid) {
             match self.get_connected_transaction::<FConnectedTransaction>(&txid) {
-                Ok(t) => Ok(pythonize(py, &t)?),
+                Ok(t) => t.to_py(py),
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
             }
         } else {
@@ -151,7 +154,7 @@ impl BitcoinDBPy {
     fn get_transaction_simple_connected(&self, txid: String, py: Python) -> PyResult<PyObject> {
         if let Ok(txid) = Txid::from_hex(&txid) {
             match self.get_connected_transaction::<SConnectedTransaction>(&txid) {
-                Ok(t) => Ok(pythonize(py, &t)?),
+                Ok(t) => t.to_py(py),
                 Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
             }
         } else {
@@ -206,7 +209,7 @@ impl BitcoinDBPy {
     fn parse_script(script_pub_key: String, py: Python) -> PyResult<PyObject> {
         let script = get_addresses_from_script(&script_pub_key);
         match script {
-            Ok(script) => Ok(pythonize(py, &script)?),
+            Ok(script) => script.to_py(py),
             Err(_) => Err(pyo3::exceptions::PyException::new_err(
                 "failed to parse script_pub_key",
             )),
@@ -289,7 +292,7 @@ macro_rules! derive_py_iter {
                 if let Some(output) = option_block {
                     let gil_guard = Python::acquire_gil();
                     let py = gil_guard.python();
-                    if let Ok(py_obj) = pythonize(py, &output) {
+                    if let Ok(py_obj) = output.to_py(py) {
                         Some(py_obj)
                     } else {
                         None
