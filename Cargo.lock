@@ -539,7 +539,6 @@ dependencies = [
  "log",
  "pyo3",
  "pyo3-log",
- "pythonize",
 ]
 
 [[package]]
@@ -599,16 +598,6 @@ dependencies = [
  "pyo3-build-config",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "pythonize"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "47d51231ce339a16752e29f237e67d9b564868c3dda2b0c3f63513d2d92ec1a9"
-dependencies = [
- "pyo3",
- "serde",
 ]
 
 [[package]]

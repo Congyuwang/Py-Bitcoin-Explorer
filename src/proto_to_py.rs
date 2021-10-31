@@ -4,6 +4,7 @@ use bitcoin::{TxIn, OutPoint};
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
 use crate::{derive_block_to_py, derive_outpoint_to_py, derive_stx_to_py, derive_ftx_to_py};
+use bitcoin_explorer::parser::script::ScriptInfo;
 
 pub trait ToPy {
     /// Converts self into a Python object.
@@ -78,6 +79,43 @@ impl ToPy for FTxOut {
     }
 }
 
+impl ToPy for ScriptInfo {
+    fn to_py(&self, py: Python) -> PyResult<PyObject> {
+        let output = PyDict::new(py);
+        let addresses: Vec<String> = self.addresses.iter().map(|a| a.to_string()).collect();
+        output.set_item("addresses", addresses)?;
+        output.set_item("pattern", self.pattern.to_string())?;
+        Ok(output.to_object(py))
+    }
+}
+
+impl ToPy for BlockHeader {
+    fn to_py(&self, py: Python) -> PyResult<PyObject> {
+        let output = PyDict::new(py);
+        output.set_item("version", self.version)?;
+        output.set_item("prev_blockhash", self.prev_blockhash.to_string())?;
+        output.set_item("merkle_root", self.merkle_root.to_string())?;
+        output.set_item("time", self.time)?;
+        output.set_item("bits", self.bits)?;
+        output.set_item("nonce", self.nonce)?;
+        Ok(output.to_object(py))
+    }
+}
+
+impl ToPy for BlockIndexRecord {
+    fn to_py(&self, py: Python) -> PyResult<PyObject> {
+        let output = PyDict::new(py);
+        output.set_item("n_version", self.n_version)?;
+        output.set_item("n_height", self.n_height)?;
+        output.set_item("n_status", self.n_status)?;
+        output.set_item("n_tx", self.n_tx)?;
+        output.set_item("n_file", self.n_file)?;
+        output.set_item("n_data_pos", self.n_data_pos)?;
+        output.set_item("n_undo_pos", self.n_undo_pos)?;
+        output.set_item("block_header", self.block_header.to_py(py)?)?;
+        Ok(output.to_object(py))
+    }
+}
 
 #[macro_export]
 macro_rules! derive_block_to_py {
