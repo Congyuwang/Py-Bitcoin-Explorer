@@ -2,7 +2,7 @@ use crate::parser::proto::simple_proto::STxIn;
 pub use bitcoin_explorer::*;
 use bitcoin::{TxIn, OutPoint};
 use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyList};
+use pyo3::types::{PyDict, PyTuple};
 use crate::{derive_block_to_py, derive_outpoint_to_py, derive_stx_to_py, derive_ftx_to_py};
 use bitcoin_explorer::parser::script::ScriptInfo;
 
@@ -36,7 +36,7 @@ impl ToPy for STxOut {
         let output = PyDict::new(py);
         output.set_item("value", self.value)?;
         let addresses: Vec<String> = self.addresses.iter().map(|a| a.to_string()).collect();
-        output.set_item("addresses", addresses)?;
+        output.set_item("addresses", PyTuple::new(py, addresses))?;
         Ok(output.to_object(py))
     }
 }
@@ -62,7 +62,7 @@ impl ToPy for TxIn {
         output.set_item("script_sig", self.script_sig.to_hex())?;
         output.set_item("sequence", self.sequence)?;
         let witness: Vec<String> = self.witness.iter().map(|w| w.to_hex()).collect();
-        output.set_item("witness", witness)?;
+        output.set_item("witness", PyTuple::new(py, witness))?;
         Ok(output.to_object(py))
     }
 }
@@ -74,7 +74,7 @@ impl ToPy for FTxOut {
         output.set_item("script_pubkey", self.script_pubkey.to_hex())?;
         output.set_item("script_type", self.script_type.to_string())?;
         let addresses: Vec<String> = self.addresses.iter().map(|a| a.to_string()).collect();
-        output.set_item("addresses", addresses)?;
+        output.set_item("addresses", PyTuple::new(py, addresses))?;
         Ok(output.to_object(py))
     }
 }
@@ -83,7 +83,7 @@ impl ToPy for ScriptInfo {
     fn to_py(&self, py: Python) -> PyResult<PyObject> {
         let output = PyDict::new(py);
         let addresses: Vec<String> = self.addresses.iter().map(|a| a.to_string()).collect();
-        output.set_item("addresses", addresses)?;
+        output.set_item("addresses", PyTuple::new(py, addresses))?;
         output.set_item("pattern", self.pattern.to_string())?;
         Ok(output.to_object(py))
     }
@@ -128,7 +128,7 @@ macro_rules! derive_block_to_py {
                 for tx in &self.txdata {
                     txdata.push(tx.to_py(py)?);
                 }
-                output.set_item("txdata", PyList::new(py, txdata))?;
+                output.set_item("txdata", PyTuple::new(py, txdata))?;
                 Ok(output.to_object(py))
             }
         }
@@ -160,12 +160,12 @@ macro_rules! derive_stx_to_py {
                 for i in &self.input {
                     txin.push(i.to_py(py)?);
                 }
-                output.set_item("input", PyList::new(py, txin))?;
+                output.set_item("input", PyTuple::new(py, txin))?;
                 let mut txout: Vec<PyObject> = Vec::with_capacity(self.output.len());
                 for o in &self.output {
                     txout.push(o.to_py(py)?);
                 }
-                output.set_item("output", PyList::new(py, txout))?;
+                output.set_item("output", PyTuple::new(py, txout))?;
                 Ok(output.to_object(py))
             }
         }
@@ -185,12 +185,12 @@ macro_rules! derive_ftx_to_py {
                 for i in &self.input {
                     txin.push(i.to_py(py)?);
                 }
-                output.set_item("input", PyList::new(py, txin))?;
+                output.set_item("input", PyTuple::new(py, txin))?;
                 let mut txout: Vec<PyObject> = Vec::with_capacity(self.output.len());
                 for o in &self.output {
                     txout.push(o.to_py(py)?);
                 }
-                output.set_item("output", PyList::new(py, txout))?;
+                output.set_item("output", PyTuple::new(py, txout))?;
                 Ok(output.to_object(py))
             }
         }
