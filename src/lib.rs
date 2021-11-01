@@ -41,9 +41,9 @@ impl BitcoinDBPy {
     }
 
     #[pyo3(text_signature = "($self, height, /)")]
-    fn get_block_simple(&self, height: usize, py: Python) -> PyResult<PyObject> {
+    fn get_block_simple(&self, height: usize, py: Python) -> PyResult<SBlockPy> {
         match self.get_block::<SBlock>(height) {
-            Ok(block) => block.to_py(py),
+            Ok(block) => SBlockPy::from_rust(py, block),
             Err(e) => Err(pyo3::exceptions::PyException::new_err(e.to_string())),
         }
     }
