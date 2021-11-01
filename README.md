@@ -40,7 +40,7 @@ import bitcoin_explorer as bex
 db = bex.BitcoinDB("~/Bitcoin")
 
 # get the length of the longest chain currently on disk.
-db.get_max_height()
+db.get_block_count()
 
 # get block of a certain height
 db.get_block(1000)
