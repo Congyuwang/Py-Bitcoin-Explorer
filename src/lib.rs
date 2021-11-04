@@ -290,13 +290,13 @@ macro_rules! derive_py_iter {
             fn __next__(mut slf: PyRefMut<Self>) -> Option<PyObject> {
                 let option_block: Option<$iter_type> = slf.iter.next();
                 if let Some(output) = option_block {
-                    let gil_guard = Python::acquire_gil();
-                    let py = gil_guard.python();
-                    if let Ok(py_obj) = output.to_py(py) {
-                        Some(py_obj)
-                    } else {
-                        None
-                    }
+                    Python::with_gil(|py| {
+                        if let Ok(py_obj) = output.to_py(py) {
+                            Some(py_obj)
+                        } else {
+                            None
+                        }
+                    })
                 } else {
                     None
                 }
@@ -307,10 +307,6 @@ macro_rules! derive_py_iter {
 
 #[pymodule]
 fn bitcoin_explorer(_py: Python, m: &PyModule) -> PyResult<()> {
-    // fix iterator assertion failure before next pyo3 update release
-    unsafe {
-        pyo3::ffi::PyEval_InitThreads();
-    }
     pyo3_log::init();
     m.add_class::<BitcoinDBPy>()?;
     Ok(())
