@@ -3,12 +3,12 @@ mod proto_to_py;
 
 #[doc(inline)]
 pub use bitcoin_explorer::*;
+use proto_to_py::*;
 use pyo3::prelude::*;
 use pyo3::PyIterProtocol;
 use pyo3::Python;
 use std::ops::Deref;
 use std::path::Path;
-use proto_to_py::*;
 
 #[pyclass(name = "BitcoinDB")]
 struct BitcoinDBPy(BitcoinDB);

@@ -1,10 +1,10 @@
 use crate::parser::proto::simple_proto::STxIn;
+use crate::{derive_block_to_py, derive_ftx_to_py, derive_outpoint_to_py, derive_stx_to_py};
+use bitcoin::{OutPoint, TxIn};
+use bitcoin_explorer::parser::script::ScriptInfo;
 pub use bitcoin_explorer::*;
-use bitcoin::{TxIn, OutPoint};
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyTuple};
-use crate::{derive_block_to_py, derive_outpoint_to_py, derive_stx_to_py, derive_ftx_to_py};
-use bitcoin_explorer::parser::script::ScriptInfo;
 
 pub trait ToPy {
     /// Converts self into a Python object.
@@ -132,7 +132,7 @@ macro_rules! derive_block_to_py {
                 Ok(output.to_object(py))
             }
         }
-    }
+    };
 }
 
 #[macro_export]
@@ -146,7 +146,7 @@ macro_rules! derive_outpoint_to_py {
                 Ok(output.to_object(py))
             }
         }
-    }
+    };
 }
 
 #[macro_export]
@@ -169,7 +169,7 @@ macro_rules! derive_stx_to_py {
                 Ok(output.to_object(py))
             }
         }
-    }
+    };
 }
 
 #[macro_export]
@@ -194,5 +194,5 @@ macro_rules! derive_ftx_to_py {
                 Ok(output.to_object(py))
             }
         }
-    }
+    };
 }
