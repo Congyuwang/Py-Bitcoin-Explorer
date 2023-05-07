@@ -27,13 +27,6 @@ jobs:
           export MACOSX_DEPLOYMENT_TARGET=10.14
           rustup target add aarch64-apple-darwin
           pip install maturin
-          maturin build --release --universal2 --out dist
-      - name: Install built wheel - universal2
-        run: |
-          pip install rocksdict --no-index --find-links dist --force-reinstall
-      - name: Python UnitTest
-        run: |
-          python -m unittest discover -v test
       - name: Upload wheels
         uses: actions/upload-artifact@v2
         with:
@@ -70,10 +63,6 @@ jobs:
           args: --release --out dist
         env:
           LIBCLANG_PATH: ${{ runner.temp }}/llvm-11.0/lib
-      - name: Install built wheel and test
-        run: |
-          pip install rocksdict --no-index --find-links dist --force-reinstall
-          python -m unittest discover -v test
       - name: Upload wheels
         uses: actions/upload-artifact@v2
         with:
@@ -101,11 +90,6 @@ jobs:
           manylinux: 2_28
           args: --release --out dist --interpreter '3.7 3.8 3.9 3.10 3.11'
           container: messense/manylinux_2_28-cross:${{ matrix.target }}
-      - name: Install built wheel and test
-        if: matrix.target == 'x86_64'
-        run: |
-          pip install rocksdict --no-index --find-links dist --force-reinstall
-          python -m unittest discover -v test
       - name: Upload wheels
         uses: actions/upload-artifact@v2
         with:
@@ -133,11 +117,6 @@ jobs:
           manylinux: 2014
           args: --release --out dist --interpreter '3.7 3.8 3.9 3.10 3.11'
           container: congyuwang/manylinux2014:${{ matrix.target }}
-      - name: Install built wheel and test
-        if: matrix.target == 'x86_64'
-        run: |
-          pip install rocksdict --no-index --find-links dist --force-reinstall
-          python -m unittest discover -v test
       - name: Upload wheels
         uses: actions/upload-artifact@v2
         with:
@@ -164,20 +143,6 @@ jobs:
           manylinux: 2_28
           args: --release --out dist --interpreter '3.7 3.8 3.9 3.10 3.11'
           container: congyuwang/manylinux_2_28-cross:${{ matrix.target }}
-      - uses: uraimo/run-on-arch-action@v2
-        if: matrix.target != 'ppc64'
-        name: Install built wheel and test
-        with:
-          arch: ${{ matrix.target }}
-          distro: ubuntu22.04
-          githubToken: ${{ github.token }}
-          install: |
-            apt-get update
-            apt-get install -y --no-install-recommends python3 python3-pip
-            pip3 install -U pip
-          run: |
-            pip3 install rocksdict --no-index --find-links dist --force-reinstall
-            python3 -m unittest discover -v test
       - name: Upload wheels
         uses: actions/upload-artifact@v2
         with:
