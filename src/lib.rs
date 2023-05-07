@@ -2,10 +2,9 @@
 mod proto_to_py;
 
 #[doc(inline)]
-pub use bitcoin_explorer::*;
+use bitcoin_explorer::*;
 use proto_to_py::*;
 use pyo3::prelude::*;
-use pyo3::PyIterProtocol;
 use pyo3::Python;
 use std::ops::Deref;
 use std::path::Path;
@@ -281,8 +280,8 @@ macro_rules! derive_py_iter {
             }
         }
 
-        #[pyproto]
-        impl PyIterProtocol for $new_iter_type {
+        #[pymethods]
+        impl $new_iter_type {
             fn __iter__(slf: PyRef<Self>) -> PyRef<Self> {
                 slf
             }
@@ -306,7 +305,8 @@ macro_rules! derive_py_iter {
 }
 
 #[pymodule]
-fn bitcoin_explorer(_py: Python, m: &PyModule) -> PyResult<()> {
+#[pyo3(name = "bitcoin_explorer")]
+fn py_bitcoin_explorer(_py: Python, m: &PyModule) -> PyResult<()> {
     pyo3_log::init();
     m.add_class::<BitcoinDBPy>()?;
     Ok(())
