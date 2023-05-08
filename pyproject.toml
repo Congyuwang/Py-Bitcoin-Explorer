@@ -1,6 +1,6 @@
 [project]
 name = "bitcoin-explorer"
-version = "1.2.19"
+version = "1.2.20"
 description = "High Performance Blockchain Deserializer"
 long_description_content_type="text/markdown"
 readme = "README.md"
@@ -10,9 +10,6 @@ documentation = 'https://congyuwang.github.io/Py-Bitcoin-Explorer/bitcoin_explor
 
 keywords = ["rust", "bitcoin", "blockchain", "deserialize",
     "parser", "explorer", "crypto", "transaction"]
-
-[package.metadata.maturin]
-python-source = "bitcoin_explorer"
 
 classifiers=[
     "Programming Language :: Rust",
@@ -31,6 +28,3 @@ classifiers=[
 [build-system]
 requires = ["maturin>=0.13,<0.14"]
 build-backend = "maturin"
-
-[tool.maturin]
-python-source = "bitcoin_explorer"
