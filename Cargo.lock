@@ -54,9 +54,9 @@ dependencies = [
 
 [[package]]
 name = "bitcoin-explorer"
-version = "1.2.19"
+version = "1.2.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f7588478d4b91a923c754d41736fe1ce56cc5f8e93ef235e749b49e1bc65117"
+checksum = "25ba0bb4dd7a827b1255fbeb01e16a903ed61c8ece831b6047820b565fbf6497"
 dependencies = [
  "bitcoin",
  "byteorder",
